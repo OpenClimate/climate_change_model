@@ -9,7 +9,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "coscm",
+    name = "SoCCo",
     version = "0.0.1",
     author = "Brian Beckage",
     author_email = "brian.beckage@uvm.edu",
@@ -18,7 +18,7 @@ setup(
     license = "BSD",
     keywords = "climate change, social interactions",
     url = "https://github.com/OpenClimate/climate_change_model",
-    packages=['coscm'],
+    packages=['SoCCo'],
     long_description=read('README.md'),
     classifiers=[
         "License :: OSI Approved :: BSD License",
