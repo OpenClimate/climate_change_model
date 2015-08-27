@@ -6,6 +6,7 @@ import pandas as pd
 import scipy.stats as sp
 
 
+
 #### computeRF #################################################################
 
 def computeRF(co2c, initial=283.9660):
@@ -124,7 +125,86 @@ if False: # Using function
     popTotal=7130010000 # Wolfram: QuantityMagnitude[CountryData["World", "Population"]]
     popN=popIntoNgroups(popTotal,nGroups=10)
     perCapitaEmissionsToDelPPM(pcE, popN)
+ 
+ #### pcEmissionsToIndex ########################################################
+
+def pcEmissionsToIndex(pcE, mean, sd):
+    """
+    Standardizes pcEmissions to a standard index using a normal cdf.
+    with a given mean and sd.
+    """  
     
+    pcE_Scaled=sp.norm(loc=mean,scale=sd).cdf(pcE)
+
+    return pcE_Scaled
+
+
+if False: # Using function
+    pcE=randomNormalF(5.049, 0.5, 10)
+    pcEmissionsToIndex(pcE,mean=pcE.mean(),sd=pcE.std())
+    pcEmissionsToIndex(pcE,mean=0.0,sd=1.0)
+      
+       
+#### pcIndexToEmissions ########################################################
+
+def pcIndexToEmissions(pcE_Scaled, mean, sd):
+    """
+    Standardizes pcEmissions to a standard index using a normal cdf.
+    The standardization can be done using a standard normal distribution (0,1)
+    or using the observed mean and variance.  The standard normal distribution
+    can be adjusted if needed.
+    """  
+    pcE=sp.norm(loc=mean,scale=sd).ppf(pcE_Scaled)
+
+    return pcE
+
+
+if False: # Using function
+    pcE=randomNormalF(5.049, 0.5, 10)
+    pce_scaled=pcEmissionsToIndex(pcE,mean=0.0,sd=1.0)
+    pcIndexToEmissions(pce_scaled,mean=0.0,sd=1.0)          
+             
+                
+#### climatePerturbation #################################################################
+
+def climatePerturbationF(windowWidth, tData_ts):
+    """
+    Takes last value in array and subtracts mean of previous windowWidth values
+    """  
+    if isinstance(tData_ts, pd.DataFrame):     
+        perturbation=tData_ts.iloc[-1]-tData_ts.iloc[-2:(-2-windowWidth):-1].mean()
+    else:
+        perturbation=tData_ts[-1]-tData_ts[-2:(-2-windowWidth):-1].mean()
+        
+    return perturbation
+
+if False: # Using function
+    data=np.array([100,110,120,111])
+    climatePerturbationF(3, data)
+    perturbation=testData[1]-testData[-1:3].mean()
+    
+    
+    
+def climatePerturbation_LeftisMoreRecent(currentIndex, windowWidth, data):
+    """
+    """  
+    if isinstance(data, pd.DataFrame):     
+        perturbation=data.iloc[currentIndex]-data.iloc[currentIndex:windowWidth].mean()
+    else:
+        perturbation=data[currentIndex]-data[currentIndex:windowWidth].mean()
+        
+    return perturbation
+
+                   
+                                                         
+                      
+
+                         
+                                                  
+                                                                                                    
+                            
+                               
+                                     
 #### popIntoNgroups ############################################################
 
 def popIntoNgroups(popTotal,nGroups,beta_a=1,beta_b=1):
@@ -174,24 +254,7 @@ def randomNormalF(mean, sd, nSamples=1):
 if False: # Using function
     randomNormalF(5.049, 0.5, 10)
 
-#### pcEmissionsToIndex ########################################################
 
-def pcEmissionsToIndex(pcE, mean, sd):
-    """
-    Standardizes pcEmissions to a standard index using a normal cdf.
-    with a given mean and sd.
-    """  
-    
-    pcE_Scaled=sp.norm(loc=mean,scale=sd).cdf(pcE)
-
-    return pcE_Scaled
-
-
-if False: # Using function
-    pcE=randomNormalF(5.049, 0.5, 10)
-    pcEmissionsToIndex(pcE,mean=pcE.mean(),sd=pcE.std())
-    pcEmissionsToIndex(pcE,mean=0.0,sd=1.0)
-    
 #### Archived version
 #   
 #    def pcEmissionsToIndex(pcE,stdNorm=False):
@@ -212,24 +275,7 @@ if False: # Using function
 #    return pcE_Scaled
     
 
-#### pcIndexToEmissions ########################################################
 
-def pcIndexToEmissions(pcE_Scaled, mean, sd):
-    """
-    Standardizes pcEmissions to a standard index using a normal cdf.
-    The standardization can be done using a standard normal distribution (0,1)
-    or using the observed mean and variance.  The standard normal distribution
-    can be adjusted if needed.
-    """  
-    pcE=sp.norm(loc=mean,scale=sd).ppf(pcE_Scaled)
-
-    return pcE
-
-
-if False: # Using function
-    pcE=randomNormalF(5.049, 0.5, 10)
-    pce_scaled=pcEmissionsToIndex(pcE,mean=0.0,sd=1.0)
-    pcIndexToEmissions(pce_scaled,mean=0.0,sd=1.0)
 
 
 
@@ -280,35 +326,6 @@ if False: # Using function
     efficacyF(10)
 
 
-#### climatePerturbation #################################################################
-
-def climatePerturbationF(windowWidth, tData_ts):
-    """
-    Takes last value in array and subtracts mean of previous windowWidth values
-    """  
-    if isinstance(tData_ts, pd.DataFrame):     
-        perturbation=tData_ts.iloc[-1]-tData_ts.iloc[-2:(-2-windowWidth):-1].mean()
-    else:
-        perturbation=tData_ts[-1]-tData_ts[-2:(-2-windowWidth):-1].mean()
-        
-    return perturbation
-
-if False: # Using function
-    data=np.array([100,110,120,111])
-    climatePerturbationF(3, data)
-    perturbation=testData[1]-testData[-1:3].mean()
-    
-    
-    
-def climatePerturbation_LeftisMoreRecent(currentIndex, windowWidth, data):
-    """
-    """  
-    if isinstance(data, pd.DataFrame):     
-        perturbation=data.iloc[currentIndex]-data.iloc[currentIndex:windowWidth].mean()
-    else:
-        perturbation=data[currentIndex]-data[currentIndex:windowWidth].mean()
-        
-    return perturbation
 
 #### perceivedRisk #######################################################################
 
