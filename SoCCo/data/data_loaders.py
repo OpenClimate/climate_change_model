@@ -21,7 +21,7 @@ def load_global_co2(source="Mauna Loa", frequency="Y"):
     if source == "Mauna Loa":
         return load_mauna_loa_co2(frequency=frequency)
     elif source == "climateDat":
-        return load_mauna_loa_co2(frequency=frequency)
+        return load_climateDat_co2(frequency=frequency)
     else:
         raise NotImplementedError("Global CO2 cannot be loaded from {}. "
                                   "Currently only supporting 'Mauna Loa' and "
@@ -67,8 +67,11 @@ def load_climateDat_co2(frequency="Y"):
         Series with index as a period containing the CO2 atmospheric
         concentrations in ppm.
     """
-    co2Data = pd.read_csv(climate_dat_filepath)
-    return co2Data
+    co2_data = pd.read_csv(climate_dat_filepath)
+    co2_data = co2_data.set_index("Year")
+    co2_data = co2_data["annual_CO2"]
+    co2_data.index = pd.to_datetime(co2_data.index)
+    return co2_data.to_period()
 
 
 def load_global_temperature(source="GISS", frequency="Y"):
@@ -123,6 +126,9 @@ def load_giss_t(frequency="Y"):
 if __name__ == "__main__":
     co2_monthly = load_global_co2(frequency="M")
     co2_yearly = load_global_co2(frequency="Y")
+
+    co2_yearly_climateDat = load_global_co2(source="climateDat", frequency="Y")
+    import IPython ; IPython.embed()
 
     t_yearly = load_global_temperature(frequency="Y")
     t_monthly = load_global_temperature(frequency="M")
