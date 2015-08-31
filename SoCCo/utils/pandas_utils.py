@@ -10,7 +10,7 @@ def unstack_and_build_index(df):
     Parameters
     ----------
     df : pandas.DataFrame
-        DataFrame of the form
+        DataFrame of the form:
               Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
         1980    0   1   2   3   4   5   6   7   8   9  10  11
         1981   12  13  14  15  16  17  18  19  20  21  22  23
@@ -18,9 +18,10 @@ def unstack_and_build_index(df):
     Returns
     -------
     df : pandas.Series
-        Series index with a monthly period of the form
-
-
+        Series index with a monthly period of the form:
+        1980-01 0
+        1980-02 1
+        ...
     """
     series_out = df.transpose().unstack()
     series_out.name = "Values"
