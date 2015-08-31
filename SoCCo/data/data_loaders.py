@@ -39,8 +39,8 @@ def load_mauna_loa_co2(frequency="Y"):
         Series with index as a period containing the CO2 atmospheric
         concentrations in ppm.
     """
-    co2_data=pd.read_excel(mauna_loa_co2_filepath,
-                           sheetname='Monthly & Annual CO2 Data', skiprows=6)
+    co2_data = pd.read_excel(mauna_loa_co2_filepath,
+                             sheetname='Monthly & Annual CO2 Data', skiprows=6)
     co2_data = co2_data.set_index('Year')
     if frequency == "Y":
         co2_data = co2_data[u'Annual Average']
@@ -119,16 +119,16 @@ def load_giss_t(frequency="Y"):
         temp = unstack_and_build_index(temp)
 
     temp.name = 'Global Temperature change (degC)'
-    temp = temp.astype(np.float64) / 100. # Convert to changes in deg C.
+    temp = temp.astype(np.float64) / 100.  # Convert to changes in deg C.
     return temp
 
 
 if __name__ == "__main__":
+    # Load some CO2 data
     co2_monthly = load_global_co2(frequency="M")
     co2_yearly = load_global_co2(frequency="Y")
-
     co2_yearly_climateDat = load_global_co2(source="climateDat", frequency="Y")
-    import IPython ; IPython.embed()
 
+    # Load some temperature data
     t_yearly = load_global_temperature(frequency="Y")
     t_monthly = load_global_temperature(frequency="M")
