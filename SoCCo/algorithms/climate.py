@@ -113,14 +113,14 @@ def perCapitaEmissionsToDelPPM(perCapCO2EmissionsN, popN,
     """Converts per capita CO2 emmissions to a change in atmospheric ppm"""
     
     co2EmissionsN = perCapCO2EmissionsN*popN
-    co2EmissionsTotal=co2EmissionsN.sum()
-    co2EmissionsToAtm = co2EmissionsTotal*(1 - FracAbsorbed)
+    co2EmissionsTotal=co2EmissionsN.sum() # sum across groups
+    co2EmissionsToAtm = co2EmissionsTotal*(1 - FracAbsorbed) # removing absorbed
     cEmissionsToAtm = co2EmissionsToAtm/3.664 # Convert CO2 to C
     deltaPPM = cEmissionsToAtm /GtCperPPM;   
     
     return deltaPPM
     
-if False: # Using function
+if False: # Using fnction
     pcE=randomNormalF(5.049, 0.5, 10)
     popTotal=7130010000 # Wolfram: QuantityMagnitude[CountryData["World", "Population"]]
     popN=popIntoNgroups(popTotal,nGroups=10)
