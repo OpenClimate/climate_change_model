@@ -3,18 +3,12 @@
 
 import numpy as np
 import pandas as pd
-import scipy.stats as sp
+# import scipy.stats as sp
+from scipy import stats
 
 from . import social as sl
 from . import climate as cl
     
-#from . import perceivedRisk,perceivedSocialNorm, attitude,computeRF, \
-#    perCapitaEmissionsToDelPPM, compute_deltaT  
-#import social as sl
-#import climate as cl
-
-
-
 #### randomUniformF ############################################################
 
 def randomUniformF(nSamples=1):
@@ -25,9 +19,6 @@ def randomUniformF(nSamples=1):
     """  
     return np.random.uniform(low=0.0, high=1.0, size=nSamples)
     
-
-if False: # Using function
-    randomUniformF(10)
 
 #### randomNormalF ############################################################
   
@@ -43,11 +34,6 @@ def randomNormalF(mean, sd, nSamples=1):
     return np.random.normal(loc=mean,scale=sd,size=nSamples)
 
 
-if False: # Using function
-    randomNormalF(5.049, 0.5, 10)
-
-
-
 #### eIncrement ################################################################
 
 def eIncrement(att, pbc, psn):
@@ -57,11 +43,11 @@ def eIncrement(att, pbc, psn):
     capita emissions
     att = attitude, pbc = perceivedBehavioralControl, psn = perceivedSocialNorm
     """
-    attInv = sp.norm(loc=0.0,scale=1.0).ppf(att) # InverseCDF
+    attInv = stats.norm(loc=0.0,scale=1.0).ppf(att) # InverseCDF
     attInv[attInv==-np.inf]= min(10*attInv[attInv!=-np.inf].min(),-10) # avoid -inf 
     attInv[attInv==np.inf]= max(10*attInv[attInv!=np.inf].max(),10) # avoid +inf
     
-    psnInv = sp.norm(loc=0.0,scale=1.0).ppf(psn) # InverseCDF
+    psnInv = stats.norm(loc=0.0,scale=1.0).ppf(psn) # InverseCDF
     psnInv[psnInv==-np.inf]= min(10*psnInv[psnInv!=-np.inf].min(),-10) # avoid -inf
     psnInv[psnInv==np.inf]= max(10*psnInv[psnInv!=np.inf].max(),10) # avoid +inf
     
@@ -70,27 +56,6 @@ def eIncrement(att, pbc, psn):
     return eDelIncrement
     
     
-if False: # Using function
-    emissionsPC=randomNormalF(5.049, 0.5, 10)
-    testClimateData=np.array([100,110,120,100])
-    perRisk=perceivedRisk(0,3,testClimateData,beta=1.0)
-    eff=efficacyF(1)
-    att=attitude(perRisk, eff)
-    pbc=perceivedBehavioralControlF(1)
-    psn=perceivedSocialNorm(emissionsPC)
-    emissionsPC_Del = eIncrement(att, pbc, psn)
-    
-    perRisk=perceivedRisk(0,3,tData,beta=1.0)
-    eff=efficacyF(10)
-    att=attitude(perRisk, eff)
-    pbc=perceivedBehavioralControlF(10)
-    psn=perceivedSocialNorm(pcE)
-    eIncrement(att, pbc, psn)
-    
-    
-    psnInv[psnInv==-inf]= min(10*psnInv[psnInv!=-inf].min(),-10)
-
-
 #### updatePCEmissions ################################################################
 
 def updatePCEmissions(pcE, eff, pbc, tData,percepWindowSize,riskSens=1.0):
@@ -108,18 +73,6 @@ def updatePCEmissions(pcE, eff, pbc, tData,percepWindowSize,riskSens=1.0):
   
     return pcE_New
     
-    
-if False: # Using function
-    emissionsPC=randomNormalF(5.049, 0.5, 10)
-    testClimateData=np.array([100,110,120,100])
-    perRisk=perceivedRisk(0,3,testClimateData,beta=1.0)
-    eff=efficacyF(10)
-    att=attitude(perRisk, eff)
-    pbc=perceivedBehavioralControlF(10)
-    psn=perceivedSocialNorm(emissionsPC)
-    emissionsPC_Del = eIncrement(att, pbc, psn)
-    emissionsPC_New = emissionsPC_Del + emissionsPC
-    updatePCEmissions(emissionsPC, eff, pbc, testClimateData, 0,3,riskSens=1.0)
 
 #### iterateOneStep ############################################################
 
@@ -142,31 +95,6 @@ def iterateOneStep(pcE_ts, tData_ts, co2_ts, eff, pbc, popN,percepWindowSize=3,r
     return pcE_vector,t_vector,co2_vector
     
     
-if False: # Using function
-    
-    co2_ts=np.linspace(290, 298, 4) # co2 initial values
-    popTotal=7130010000 # Wolfram: QuantityMagnitude[CountryData["World", "Population"]]
-    popN=popIntoNgroups(popTotal,nGroups=10)
-    pcE_ts=randomNormalF(5.049, 0.5, 10)
-    pcE_ts=np.atleast_2d(pcE_ts).transpose()
-    tData_ts=np.array([0,0.1,0.2,0.1]) # temperature initial values
-    
-    eff=efficacyF(10)
-    pbc=perceivedBehavioralControlF(10)
-    yearCurrent=0
-    percepWindowSize=3
-    riskSens=1.0
-    
-    pcE_ts,tData_ts,co2_ts = iterateOneStep(pcE_ts,tData_ts, co2_ts, eff, pbc,popN,
-        percepWindowSize=3,riskSens=1.0)
-        
-    pcE_ts,tData_ts,co2_ts = iterateOneStep(pcE_ts,tData_ts, co2_ts, eff, pbc,popN,
-        percepWindowSize=3,riskSens=1.0)
-        
-    pcE_ts,tData_ts,co2_ts = iterateOneStep(pcE_ts,tData_ts, co2_ts, eff, pbc,popN,
-        percepWindowSize=3,riskSens=1.0)
-        
-
 #### iterateOneStep ############################################################
 
 def iterateNsteps(pcE_init,tData_init, co2_init, nSteps, eff, pbc,popN,
@@ -184,28 +112,6 @@ def iterateNsteps(pcE_init,tData_init, co2_init, nSteps, eff, pbc,popN,
     return pcE_init,tData_init,co2_init
 
 
-if False:
-    
-    co2_ts=np.linspace(290, 300, 4)
-    popTotal=7130010000 # Wolfram: QuantityMagnitude[CountryData["World", "Population"]]
-    popN=sc.popIntoNgroups(popTotal,nGroups=10)
-    pcE_ts=sc.randomNormalF(5.049, 0.5, 10)
-    pcE_ts=np.atleast_2d(pcE_ts).transpose()
-    tData_ts=np.array([0,0.1,0.2,0.1]) # temperature
-    eff=sc.efficacyF(10)
-    pbc=sc.perceivedBehavioralControlF(10)
-    percepWindowSize=3
-    riskSens=1.0
-    
-    iterateNsteps(pcE_ts,tData_ts, co2_ts, 5, eff, pbc,popN,
-            percepWindowSize,riskSens)
-            
-    # replaces
-    for i in range(50):
-        print i
-        pcE_ts,tData_ts,co2_ts = iterateOneStep(pcE_ts,tData_ts, co2_ts, eff, pbc,popN,
-            percepWindowSize=3,riskSens=1.0)
 
-    
 
 
