@@ -1,9 +1,8 @@
-### This folder contains the social functions for the coupled social
-### and climate model SoCCo
+"""This module contains the social functions for the coupled social
+and climate model SoCCo"""
 
 import numpy as np
 import pandas as pd
-# import scipy.stats as sp
 from scipy import stats
 
 from . import climate as cl

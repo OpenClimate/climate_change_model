@@ -1,9 +1,8 @@
-### This folder contains the functions for iterating the social and climate 
-### coupled model (SoCCo)
+""" This module contains the functions for iterating the social and climate 
+coupled model (SoCCo)"""
 
 import numpy as np
 import pandas as pd
-# import scipy.stats as sp
 from scipy import stats
 
 from . import social as sl
