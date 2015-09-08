@@ -43,7 +43,7 @@ def eIncrement(att, pbc, psn):
     att = attitude, pbc = perceivedBehavioralControl, psn = perceivedSocialNorm
     """
     attInv = stats.norm(loc=0.0,scale=1.0).ppf(att) # InverseCDF
-    attInv[attInv==-np.inf]= min(10*attInv[attInv!=-np.inf].min(),-10) # avoid -inf 
+    attInv[attInv==-np.inf]= min(10*attInv[attInv!=-np.inf].min(),-10) # avoid -inf !NEED TO CHANGE VALUE OF 10!
     attInv[attInv==np.inf]= max(10*attInv[attInv!=np.inf].max(),10) # avoid +inf
     
     psnInv = stats.norm(loc=0.0,scale=1.0).ppf(psn) # InverseCDF
@@ -62,11 +62,9 @@ def updatePCEmissions(pcE, eff, pbc, tData,percepWindowSize,riskSens=1.0):
     updatePCEmissions calculates a del pcE and then adds this to current pcE to
     return new pcE in 
     """
-    # climateDat=testClimateData; yearCurrent=0; percepWindowSize=3; riskSens=1.0
-    psn= sl.perceivedSocialNorm(pcE) #
+    psn= sl.perceivedSocialNorm(pcE) 
     risk = sl.perceivedRisk(percepWindowSize, tData, riskSens)
     att = sl.attitude(risk, eff)
-    # emissionsPC_Index = pcEmissionsToIndex(emissionsPC, mean=emissionsPC.mean(), sd=emissionsPC.std())
     pcE_Del = eIncrement(att, pbc, psn)
     pcE_New = pcE_Del + pcE
   

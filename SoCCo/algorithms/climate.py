@@ -90,7 +90,7 @@ def pcEmissionsToIndex(pcE, mean, sd):
     with a given mean and sd.
     """  
     
-    pcE_Scaled=sp.norm(loc=mean,scale=sd).cdf(pcE)
+    pcE_Scaled=stats.norm(loc=mean,scale=sd).cdf(pcE)
 
     return pcE_Scaled
 
@@ -103,7 +103,7 @@ def pcIndexToEmissions(pcE_Scaled, mean, sd):
     or using the observed mean and variance.  The standard normal distribution
     can be adjusted if needed.
     """  
-    pcE=sp.norm(loc=mean,scale=sd).ppf(pcE_Scaled)
+    pcE=stats.norm(loc=mean,scale=sd).ppf(pcE_Scaled)
 
     return pcE
        

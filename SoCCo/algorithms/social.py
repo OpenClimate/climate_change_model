@@ -41,7 +41,6 @@ def perceivedSocialNorm(xVect):
     population.
     """
     xDiff = xVect-xVect.mean()
-    # xDiff_Scaled=sp.norm(loc=0,scale=1).cdf(xDiff)
     xDiff_Scaled=stats.uniform(loc=-1.0,scale=2.0).cdf(xDiff) # range from loc to loc+scale
     
     return xDiff_Scaled
