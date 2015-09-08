@@ -66,7 +66,6 @@ if False: ### WORKS!
 
 ### Updating model n steps #####################################################
 
-if False: ### WORKS!
     co2_ts=np.linspace(290, 300, 4)
     popTotal=7130010000 # Wolfram: QuantityMagnitude[CountryData["World", "Population"]]
     popN=sc.popIntoNgroups(popTotal,nGroups=10)
@@ -133,15 +132,17 @@ if False:
 
 
 
-################ Testing of climate portion of model against observations #####
+### Code Testing ###############################################################
 if False:
+
+### using functions
 
 
 
 ### Importing real data ################
     
     # CO2 data
-    co2Data=pd.read_excel("data/co2-atmospheric-mlo-monthly-scripps.xls", 
+    co2Data=pd.read_excel("co2-atmospheric-mlo-monthly-scripps.xls", 
                         sheetname='Monthly & Annual CO2 Data', skiprows=6)
     co2Data = co2Data.set_index('Year')
     co2Data.head()
@@ -154,12 +155,12 @@ if False:
     co2A.head()
     co2A.plot()                 
 
-    # global temperature data
+# global temperature data
+
     giss_temp = pd.read_table("http://data.giss.nasa.gov/gistemp/tabledata_v3/GLB.Ts+dSST.txt", sep="\s+", skiprows=7,
                             skip_footer=11, engine="python")
     giss_temp = giss_temp.set_index('Year')
     giss_temp.head()
-    giss_temp.dtypes
     tempA = giss_temp[[u'J-D']] # keeping only annual means
     tempA = tempA.drop("Year")
     tempA = tempA.where(tempA != "****", np.nan)
@@ -167,18 +168,10 @@ if False:
     tempA = tempA.astype(np.float64)/100 # rescaling T
     tempA.index=pd.to_datetime(pd.Series(tempA.index),format="%Y")
     tempA.columns=['annual T']
-    tempA=tempA.dropna()
-    
-    # examining data
     tempA.plot()
-    tempA.dtypes
-    tempA.info()
-    tempA.head()
-    tempA.tail()
 
 
-
-    ### Combining series into a single dataframe
+### Combining series into a dataframe
     climateDat=pd.concat([tempA, co2A], axis=1)
     climateDat.head()
     climateDat=climateDat.dropna() # removing NAs
@@ -189,19 +182,21 @@ if False:
     # climateDat.to_csv('climateDat.csv')
 
 
-    ### Projecting temperature change using Forrests impulse model and obs CO2
+### Projecting temperature change using obs CO2
 
-    rf=sc.computeRF(climateDat[['annual CO2']])
-    annualPred_T=sc.compute_deltaT(rf)
+    rf=computeRF(climateDat[['annual CO2']])
+    annualPred_T=compute_deltaT(rf)
     climateDat.head()
     climateDat.columns
-    climateDat['Annual delT Pred']=sc.compute_deltaT(rf)
+    climateDat['Annual delT Pred']=compute_deltaT(rf)
     climateDat['Annual T Pred']=climateDat['Annual delT Pred'] +climateDat['annual T'].iloc[0:10].mean()
         #+climateDat['annual T'].iloc[0]
     climateDat.head()
     climateDat.plot(subplots=True, figsize=(16, 12))
 
-    ### Plotting predicted T vs obsT and atm CO2 ###################################
+
+
+### Plotting comparison to data ################################################
 
     import numpy as np
     import matplotlib.pyplot as plt
