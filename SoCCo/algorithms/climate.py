@@ -74,8 +74,8 @@ def perCapitaEmissionsToDelPPM(perCapCO2EmissionsN, popN,
     """Converts per capita CO2 emmissions to a change in atmospheric ppm"""
     
     co2EmissionsN = perCapCO2EmissionsN*popN
-    co2EmissionsTotal=co2EmissionsN.sum() # sum across groups
-    co2EmissionsToAtm = co2EmissionsTotal*(1 - FracAbsorbed) # removing absorbed
+    co2EmissionsTotal=co2EmissionsN.sum()
+    co2EmissionsToAtm = co2EmissionsTotal*(1 - FracAbsorbed)
     cEmissionsToAtm = co2EmissionsToAtm/3.664 # Convert CO2 to C
     deltaPPM = cEmissionsToAtm /GtCperPPM;   
     
