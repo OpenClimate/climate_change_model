@@ -1,4 +1,3 @@
-# Empty file
 
 from algorithms.climate import computeRF
 from algorithms.climate import compute_deltaT
@@ -20,3 +19,4 @@ from algorithms.iter import randomNormalF
 from algorithms.iter import eIncrement
 from algorithms.iter import updatePCEmissions
 from algorithms.iter import iterateOneStep
+from algorithms.iter import iterateNSteps
