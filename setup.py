@@ -1,5 +1,6 @@
 import os
 from setuptools import setup
+from os.path import join
 
 # Utility function to read the README file.
 # Used for the long_description.  It's nice, because now 1) we have a top level
@@ -10,7 +11,7 @@ def read(fname):
 
 setup(
     name = "SoCCo",
-    version = "0.0.1",
+    version = read(join('SoCCo','__init__.py')),
     author = "Brian Beckage",
     author_email = "brian.beckage@uvm.edu",
     description = ("Studying the effects of social interactions on climate "
