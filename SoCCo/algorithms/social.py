@@ -57,10 +57,10 @@ def efficacyF(nSamples=1):
 
 #### perceivedRisk #######################################################################
 
-def perceivedRisk(tLag,tData_ts,beta=1.0):
+def perceivedRisk(tLag,tData_ts,riskSensitivity=1.0):
     """ returns perceived risk on scale (0,1)
     """
-    myPerceivedRisk = beta*cl.climatePerturbationF(tLag, tData_ts)
+    myPerceivedRisk = riskSensitivity*cl.climatePerturbationF(tLag, tData_ts)
     return stats.norm(loc=0,scale=1).cdf(myPerceivedRisk)
     
 
