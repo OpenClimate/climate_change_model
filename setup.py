@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 from os.path import join
 
 # Utility function to read the README file.
@@ -19,7 +19,7 @@ setup(
     license = "BSD",
     keywords = "climate change, social interactions",
     url = "https://github.com/OpenClimate/climate_change_model",
-    packages=['SoCCo'],
+    packages=find_packages(),
     long_description=read('README.md'),
     classifiers=[
         "License :: OSI Approved :: BSD License",
